@@ -175,7 +175,6 @@ class UpdateLicensesCommand extends Command
             'admin-dev/themes/default/css/font.css',
             'admin-dev/themes/new-theme/package.json',
             'tools/build/Library/InstallUnpacker/content/js-runner.js',
-            'themes/classic/_dev/package.json',
             'tools/build/composer.json',
         ];
 
