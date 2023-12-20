@@ -13,9 +13,6 @@ assets:  ## Rebuilds all the static assets, running npm install-clean as needed
 front-core: ## Building core theme assets
 	./tools/assets/build.sh front-core
 
-front-classic: ## Building classic theme assets
-	./tools/assets/build.sh front-classic
-
 admin-default: ## Building admin default theme assets
 	./tools/assets/build.sh admin-default
 
@@ -24,7 +21,7 @@ admin-new-theme: ## Building admin new theme assets
 
 admin: admin-default admin-new-theme ## Building admin assets
 
-front: front-core front-classic ## Building front assets
+front: front-core ## Building front assets
 
 cs-fixer: ## Run php-cs-fixer
 	./vendor/bin/php-cs-fixer fix
@@ -43,6 +40,6 @@ es-linter: ## Run lint-fix
 	cd themes/classic/_dev && npm run lint-fix
 	cd themes && npm run lint-fix
 
-.PHONY: help install composer assets front-core front-classic admin-default admin-new-theme admin front cs-fixer phpstan scss-fixer es-linter
+.PHONY: help install composer assets front-core admin-default admin-new-theme admin front cs-fixer phpstan scss-fixer es-linter
 
 .DEFAULT_GOAL := install

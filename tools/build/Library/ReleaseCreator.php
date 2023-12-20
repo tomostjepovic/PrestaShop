@@ -128,7 +128,6 @@ class ReleaseCreator
         //'admin/themes/new\-theme/js$',
         'admin/themes/new\-theme/scss$',
         'themes/_core$',
-        'themes/classic/_dev',
         'themes/webpack\.config\.js$',
         'themes/package\.json$',
         'vendor\/[a-zA-Z0-0_-]+\/[a-zA-Z0-0_-]+\/[Tt]ests?$',

@@ -44,12 +44,8 @@ build_asset() {
       echo ">>> Building core theme assets..."
       build "$PROJECT_PATH/themes"
     ;;
-    front-classic)
-      echo ">>> Building classic theme assets..."
-      build "$PROJECT_PATH/themes/classic/_dev"
-    ;;
     all)
-      build_asset admin-default & build_asset admin-new-theme & build_asset front-core & build_asset front-classic
+      build_asset admin-default & build_asset admin-new-theme & build_asset front-core
     ;;
     *)
       echo "Unknown asset to build $1"
