@@ -99,12 +99,16 @@ class ImageGenerator
         $result = true;
 
         foreach ($configuredImageFormats as $imageFormat) {
+            // For JPG images, we let Imagemanager decide what to do and choose between JPG/PNG.
+            // For webp and avif extensions, we want it to follow our command and ignore the original format.
+            $forceFormat = ($imageFormat !== 'jpg');
             if (!ImageManager::resize(
                 $filePath,
                 sprintf('%s-%s.%s', dirname($filePath) . DIRECTORY_SEPARATOR . $imageId, stripslashes($imageType->name), $imageFormat),
                 $imageType->width,
                 $imageType->height,
-                $imageFormat
+                $imageFormat,
+                $forceFormat
             )) {
                 $result = false;
             }

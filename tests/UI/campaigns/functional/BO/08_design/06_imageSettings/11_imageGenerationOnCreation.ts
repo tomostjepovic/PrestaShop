@@ -6,8 +6,10 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import setFeatureFlag from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
+import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import categoriesPage from '@pages/BO/catalog/categories';
 import addCategoryPage from '@pages/BO/catalog/categories/add';
 import productsPage from '@pages/BO/catalog/products';
@@ -46,6 +48,9 @@ describe('BO - Design - Image Settings - Image Generation on creation', async ()
     coverImage: 'cover.jpg',
     thumbnailImage: 'thumb.jpg',
   });
+
+  // Pre-condition: Enable Multiple image formats
+  setFeatureFlag(featureFlagPage.featureFlagMultipleImageFormats, true, `${baseContext}_enableMultipleImageFormats`);
 
   // before and after functions
   before(async function () {
@@ -317,4 +322,7 @@ describe('BO - Design - Image Settings - Image Generation on creation', async ()
       }));
     });
   });
+
+  // Post-condition: Disable Multiple image formats
+  setFeatureFlag(featureFlagPage.featureFlagMultipleImageFormats, false, `${baseContext}_disableMultipleImageFormats`);
 });

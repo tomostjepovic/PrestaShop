@@ -28,7 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Image;
 
+use FeatureFlag;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Image\Exception\ImageFormatConfigurationException;
 
 class ImageFormatConfiguration implements ImageFormatConfigurationInterface
@@ -62,6 +64,11 @@ class ImageFormatConfiguration implements ImageFormatConfigurationInterface
 
         // We will start with the base format, that will be generated no matter what
         $this->formatsToGenerate = [self::DEFAULT_IMAGE_FORMAT];
+
+        // If multiple image formats feature is not enabled, we return only the fallback format
+        if (!FeatureFlag::isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
+            return $this->formatsToGenerate;
+        }
 
         // If it is enabled, we check for configured formats.
         $configuration = $this->configuration->get(self::IMAGE_FORMAT_CONFIGURATION_KEY);

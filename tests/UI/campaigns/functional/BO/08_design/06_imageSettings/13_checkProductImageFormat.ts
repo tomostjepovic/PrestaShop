@@ -4,10 +4,12 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
+import setFeatureFlag from '@commonTests/BO/advancedParameters/newFeatures';
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
+import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import productsPage from '@pages/BO/catalog/products';
 import createProductsPage from '@pages/BO/catalog/products/add';
 import descriptionTab from '@pages/BO/catalog/products/add/descriptionTab';
@@ -46,6 +48,9 @@ describe('BO - Design - Image Settings - Check product image format', async () =
     coverImage: 'coverWEBP.webp',
     status: true,
   });
+
+  // Pre-condition: Enable Multiple image formats
+  setFeatureFlag(featureFlagPage.featureFlagMultipleImageFormats, true, `${baseContext}_enableMultipleImageFormats`);
 
   // before and after functions
   before(async function () {
@@ -124,22 +129,19 @@ describe('BO - Design - Image Settings - Check product image format', async () =
     {
       product: productDataPNG,
       extOriginal: 'png',
-      extGenerated: 'jpg',
-      extImageType: 'png',
+      extGenerated: 'png',
     },
     {
       product: productDataJPG,
       extOriginal: 'jpg',
       extGenerated: 'jpg',
-      extImageType: 'jpg',
     },
     {
       product: productDataWEBP,
       extOriginal: 'webp',
       extGenerated: 'jpg',
-      extImageType: 'png',
     },
-  ].forEach((arg: {product: ProductData, extOriginal: string, extGenerated: string, extImageType: string}, index: number) => {
+  ].forEach((arg: {product: ProductData, extOriginal: string, extGenerated: string}, index: number) => {
     describe(`Image Generation - Product - Image Format : ${arg.extOriginal.toUpperCase()}`, async () => {
       if (index) {
         it('should go to BO', async function () {
@@ -241,8 +243,11 @@ describe('BO - Design - Image Settings - Check product image format', async () =
         const fileExistsOriginal = await files.doesFileExist(pathImageOriginal);
         expect(fileExistsOriginal, `The file ${pathImageOriginal} doesn't exist!`).to.eq(true);
 
-        const imageTypeOriginal = await files.getFileType(pathImageOriginal);
-        expect(imageTypeOriginal).to.be.eq(arg.extImageType);
+        // @todo : https://github.com/PrestaShop/PrestaShop/issues/32265
+        if (arg.extOriginal !== 'webp') {
+          const imageTypeOriginal = await files.getFileType(pathImageOriginal);
+          expect(imageTypeOriginal).to.be.eq(arg.extOriginal);
+        }
 
         // Check the Jpg file
         const pathImageJPG: string = `${files.getRootPath()}/img/p/${pathProductId}/${idProductImage}-large_default.jpg`;
@@ -251,7 +256,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
         expect(fileExistsJPG, `The file ${pathImageJPG} doesn't exist!`).to.eq(true);
 
         const imageTypeJPG = await files.getFileType(pathImageJPG);
-        expect(imageTypeJPG).to.be.eq(arg.extImageType);
+        expect(imageTypeJPG).to.be.eq(arg.extGenerated);
 
         // Check the WebP file
         const pathImageWEBP: string = `${files.getRootPath()}/img/p/${pathProductId}/${idProductImage}-large_default.webp`;
@@ -329,4 +334,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
   ].forEach((arg: {product: ProductData, extension: string}) => {
     deleteProductTest(arg.product, `${baseContext}_removeProduct${arg.extension}`);
   });
+
+  // Post-condition: Disable Multiple image formats
+  setFeatureFlag(featureFlagPage.featureFlagMultipleImageFormats, false, `${baseContext}_disableMultipleImageFormats`);
 });

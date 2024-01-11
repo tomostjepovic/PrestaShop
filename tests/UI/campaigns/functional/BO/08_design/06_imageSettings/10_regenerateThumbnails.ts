@@ -5,8 +5,10 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import setFeatureFlag from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
+import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
 
@@ -69,6 +71,9 @@ describe('BO - Design - Image Settings - Regenerate thumbnail', async () => {
     stores: [],
   };
   const supplierImage: string = `${files.getRootPath()}/img/su/1.jpg`;
+
+  // Pre-condition: Enable Multiple image formats
+  setFeatureFlag(featureFlagPage.featureFlagMultipleImageFormats, true, `${baseContext}_enableMultipleImageFormats`);
 
   // before and after functions
   before(async function () {
@@ -434,4 +439,7 @@ describe('BO - Design - Image Settings - Regenerate thumbnail', async () => {
       }));
     });
   });
+
+  // Post-condition: Disable Multiple image formats
+  setFeatureFlag(featureFlagPage.featureFlagMultipleImageFormats, false, `${baseContext}_disableMultipleImageFormats`);
 });

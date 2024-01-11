@@ -98,7 +98,8 @@ final class CategoryCoverImageUploader extends AbstractImageUploader implements 
             $temporaryImageName,
             _PS_IMG_DIR_ . 'c' . DIRECTORY_SEPARATOR . $id . '.jpg',
             null,
-            null
+            null,
+            'jpg'
         );
 
         if (!$optimizationSucceeded) {

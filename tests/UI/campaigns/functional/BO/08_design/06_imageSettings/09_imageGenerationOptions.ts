@@ -4,8 +4,10 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import setFeatureFlag from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
+import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
 
@@ -20,6 +22,9 @@ const baseContext: string = 'functional_BO_design_imageSettings_imageGenerationO
 describe('BO - Design - Image Settings : Image Generation options', async () => {
   let browserContext: BrowserContext;
   let page: Page;
+
+  // Pre-condition: Enable Multiple image formats
+  setFeatureFlag(featureFlagPage.featureFlagMultipleImageFormats, true, `${baseContext}_enableMultipleImageFormats`);
 
   describe('Image Generation options', async () => {
     // before and after functions
@@ -68,4 +73,7 @@ describe('BO - Design - Image Settings : Image Generation options', async () => 
       expect(avifDisabled).to.eq(true);
     });
   });
+
+  // Post-condition: Disable Multiple image formats
+  setFeatureFlag(featureFlagPage.featureFlagMultipleImageFormats, false, `${baseContext}_disableMultipleImageFormats`);
 });

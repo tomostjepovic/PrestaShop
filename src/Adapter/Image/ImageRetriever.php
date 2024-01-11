@@ -297,6 +297,10 @@ class ImageRetriever
             $fileName,
         ]);
 
+        // For JPG images, we let Imagemanager decide what to do and choose between JPG/PNG.
+        // For webp and avif extensions, we want it to follow our command and ignore the original format.
+        $forceFormat = ($imageFormat !== 'jpg');
+
         // Check if the thumbnail exists and generate it if needed
         if (!file_exists($resizedImagePath)) {
             ImageManager::resize(
@@ -304,7 +308,8 @@ class ImageRetriever
                 $resizedImagePath,
                 (int) $imageTypeData['width'],
                 (int) $imageTypeData['height'],
-                $imageFormat
+                $imageFormat,
+                $forceFormat
             );
         }
     }

@@ -9,6 +9,8 @@ import {Page} from 'playwright';
 class FeatureFlag extends BOBasePage {
   public readonly pageTitle: string;
 
+  public readonly featureFlagMultipleImageFormats: string;
+
   public readonly featureFlagAuthorizationServer: string;
 
   private readonly featureFlagSwitchButton: (status: string, feature: string, toggle: number) => string;
@@ -32,6 +34,7 @@ class FeatureFlag extends BOBasePage {
     this.successfulUpdateMessage = 'Update successful';
 
     // Feature Flag
+    this.featureFlagMultipleImageFormats = 'multiple_image_format';
     this.featureFlagAuthorizationServer = 'authorization_server';
     // Selectors
     this.featureFlagSwitchButton = (status: string, feature: string, toggle: number) => `#feature_flag_${
@@ -53,6 +56,9 @@ class FeatureFlag extends BOBasePage {
     let isStable: boolean;
 
     switch (featureFlag) {
+      case this.featureFlagMultipleImageFormats:
+        isStable = true;
+        break;
       case this.featureFlagAuthorizationServer:
         isStable = false;
         break;
