@@ -29,40 +29,40 @@ let config = {
     },
     output: {
         path: path.resolve(__dirname, 'public'),
-        filename: 'tomotest.bundle.js'
+        filename: '[name].bundle.js'
+    },
+    resolve: {
+      extensions: ['.js', '.vue', '.ts'],
+      alias: {
+        '@PSTypes': path.resolve(__dirname, '../../admin-dev/themes/new-theme/js/types'),
+        '@components': path.resolve(__dirname, '../../admin-dev/themes/new-theme/js/components'),
+        '@app': path.resolve(__dirname, '../../admin-dev/themes/new-theme/js/app')
+      }
     },
     plugins: [],
     module: {
-        rules: [
-            {
-                test: /\.js$/,
-                include: path.resolve(__dirname, '../js'),
-                use: [{
-                    loader: 'babel-loader',
-                    options: {
-                        presets: [
-                            ['es2015', { modules: false }]
-                        ]
-                    }
-                }]
-            },
-            {
-                test: /\.ts?$/,
-                loader: 'ts-loader',
-                options: {
-                    onlyCompileBundledFiles: true,
-                },
-                exclude: /node_modules/,
-            },
-        ]
-    },
-    resolve: {
-        extensions: ['.js', '.ts'],
-        alias: {
-            '@PSTypes': path.resolve(__dirname, '../admin042nf096pzhya9ypys5/themes/new-theme/js/types'),
-            '@components': path.resolve(__dirname, '../../admin042nf096pzhya9ypys5/themes/new-theme/js/components'),
-            '@app': path.resolve(__dirname, '../admin042nf096pzhya9ypys5/themes/new-theme/js/app')
-        }
+      rules: [
+        {
+          test: /\.js$/,
+          include: path.resolve(__dirname, '../js'),
+          use: [{
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                ['es2015', { modules: false }]
+              ]
+            }
+          }]
+        },
+        {
+          test: /\.ts?$/,
+          loader: 'ts-loader',
+          options: {
+            onlyCompileBundledFiles: true,
+          },
+          exclude: /node_modules/,
+        },
+      ]
     },
 };
 
