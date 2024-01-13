@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>b2bwholesale</name>
+    <displayName><![CDATA[B2B Wholesale]]></displayName>
+    <version><![CDATA[1.0.0]]></version>
+    <description><![CDATA[Enables B2B wholesale features.]]></description>
+    <author><![CDATA[Code Solutions ]]></author>
+    <tab><![CDATA[administration]]></tab>
+    <is_configurable>1</is_configurable>
+    <need_instance>0</need_instance>
+</module>

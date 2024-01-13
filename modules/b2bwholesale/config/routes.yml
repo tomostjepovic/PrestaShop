@@ -1,0 +1,25 @@
+activity_type_list:
+  path: activitytype/list
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShop\Module\B2BWholesale\Controller\Admin\ActivityTypeController::listAction
+    _legacy_controller: ActivityTypeController
+    _legacy_link: ActivityTypeController
+
+activity_type_create:
+  path: activitytype/create
+  methods: [ GET, POST ]
+  defaults:
+    _controller: PrestaShop\Module\B2BWholesale\Controller\Admin\ActivityTypeController::createAction
+
+activity_type_edit:
+  path: activitytype/edit/{activityTypeId}
+  methods: [ GET, POST ]
+  defaults:
+    _controller: PrestaShop\Module\B2BWholesale\Controller\Admin\ActivityTypeController::editAction
+
+activity_type_delete:
+  path: activitytype/delete/{activityTypeId}
+  methods: [ DELETE ]
+  defaults:
+    _controller: PrestaShop\Module\B2BWholesale\Controller\Admin\ActivityTypeController::deleteAction

@@ -1,0 +1,20 @@
+{% extends "@PrestaShop/Admin/layout.html.twig" %}
+{% set layoutHeaderToolbarBtn = {
+    add_manufacturer: {
+        href: path('activity_type_create'),
+        desc: 'Add new activity type'|trans({}, 'Admin.ActivityType.Feature'),
+        icon: 'add_circle_outline',
+    },
+}
+%}
+{% block content %}
+    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': activityTypesGrid} %}
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+    <script type="module" src="{{ asset('../modules/b2bwholesale/views/js/pages/activity_type_list/index.js') }}"></script>
+
+{% endblock %}
+

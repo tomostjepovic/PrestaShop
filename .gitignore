@@ -8,6 +8,7 @@ npm-debug.log.*
 *.swp
 *.swo
 .cache/
+.idea
 
 # Cache
 /cache/*
@@ -147,6 +148,7 @@ app/config/config.php
 # Themes, modules and overrides
 
 modules/*
+!modules/b2bwholesale/
 override/*
 themes/*/
 themes/classic
