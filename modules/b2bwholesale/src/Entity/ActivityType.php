@@ -17,33 +17,59 @@ class ActivityType
     private int $id;
 
     /**
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\OneToMany(targetEntity="PrestaShop\Module\B2BWholesale\Entity\ActivityTypeLang", cascade={"persist", "remove"}, mappedBy="activityType")
      */
-    private string $name;
+    private $activityTypeLangs;
 
-    public function getId(): int {
+    public function __construct()
+    {
+        $this->activityTypeLangs = new ArrayCollection();
+    }
+
+    /**
+     * @param int $langId
+     * @return QuoteLang|null
+     */
+    public function getActivityTypeLangByLangId(int $langId): ?ActivityTypeLang
+    {
+        foreach ($this->activityTypeLangs as $activityTypeLang) {
+            if ($langId === $activityTypeLang->getLang()->getId()) {
+                return $activityTypeLang;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param QuoteLang $quoteLang
+     * @return $this
+     */
+    public function addActivityTypeLang(ActivityTypeLang $activityTypeLang)
+    {
+        $activityTypeLang->setActivityType($this);
+        $this->activityTypeLangs->add($activityTypeLang);
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getId(): int
+    {
         return $this->id;
     }
 
-    public function setId(int $id): void
+    public function getActivityTypeLangs()
     {
-        $this->$id = $id;
-    }
-
-    public function getName(): string {
-        return $this->name;
-    }
-
-    public function setName($name): void
-    {
-        $this->name = $name;
+        return $this->activityTypeLangs;
     }
 
     public function toArray(): array
     {
         return [
-            'id_activity_type' => $this->getId(),
-            'name' => $this->getName(),
+            'id_activity_type' => $this->getId()
         ];
     }
 }

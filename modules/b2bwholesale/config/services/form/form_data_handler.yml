@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.module.b2bwholesale.form.identifiable_object.data_handler.activity_type_form_data_handler:
+    class: 'PrestaShop\Module\B2BWholesale\Form\DataHandler\ActivityTypeFormDataHandler'
+    arguments:
+      - '@prestashop.core.admin.lang.repository'
+      - '@doctrine.orm.default_entity_manager'

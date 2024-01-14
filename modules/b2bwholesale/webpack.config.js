@@ -25,6 +25,9 @@ let config = {
     entry: {
         activity_types_list: [
             './views/js/pages/activity_type_list/index.js',
+        ],
+        activity_types_form: [
+          './views/js/pages/activity_type_form/index.js',
         ]
     },
     output: {

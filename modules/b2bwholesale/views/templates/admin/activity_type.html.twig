@@ -4,3 +4,9 @@
 
 {{ form_end(form) }}
 {% endblock %}
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('../modules/b2bwholesale/public/activity_types_form.bundle.js') }}"></script>
+
+{% endblock %}

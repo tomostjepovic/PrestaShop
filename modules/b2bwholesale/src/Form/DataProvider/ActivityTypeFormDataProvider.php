@@ -24,8 +24,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\Module\B2BWholesale\Core\Form\IdentifiableObject\DataProvider;
+namespace PrestaShop\Module\B2BWholesale\Form\DataProvider;
 
+use Doctrine\ORM\EntityManagerInterface;
+use PrestaShop\Module\B2BWholesale\Entity\ActivityType;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\EditableManufacturer;
@@ -34,13 +36,9 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FormDataProv
 /**
  * Provides data for manufacturers add/edit forms
  */
-final class ManufacturerFormDataProvider implements FormDataProviderInterface
+final class ActivityTypeFormDataProvider implements FormDataProviderInterface
 {
-    /**
-     * @var CommandBusInterface
-     */
-    private $bus;
-
+    protected $entityManager;
     /**
      * @var bool
      */
@@ -52,16 +50,15 @@ final class ManufacturerFormDataProvider implements FormDataProviderInterface
     private $defaultShopAssociation;
 
     /**
-     * @param CommandBusInterface $bus
      * @param bool $multistoreEnabled
      * @param int[] $defaultShopAssociation
      */
     public function __construct(
-        CommandBusInterface $bus,
+        EntityManagerInterface $entityManager,
         $multistoreEnabled,
         array $defaultShopAssociation
     ) {
-        $this->bus = $bus;
+        $this->entityManager = $entityManager;
         $this->multistoreEnabled = $multistoreEnabled;
         $this->defaultShopAssociation = $defaultShopAssociation;
     }
@@ -69,23 +66,13 @@ final class ManufacturerFormDataProvider implements FormDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getData($manufacturerId)
+    public function getData($activityTypeId)
     {
-        /** @var EditableManufacturer $editableManufacturer */
-        $editableManufacturer = $this->bus->handle(new GetManufacturerForEditing((int) $manufacturerId));
+        $activity_type = $this->entityManager->getRepository(ActivityType::class)->find($activityTypeId);
 
-        $data = [
-            'name' => $editableManufacturer->getName(),
-            'short_description' => $editableManufacturer->getLocalizedShortDescriptions(),
-            'description' => $editableManufacturer->getLocalizedDescriptions(),
-            'meta_title' => $editableManufacturer->getLocalizedMetaTitles(),
-            'meta_description' => $editableManufacturer->getLocalizedMetaDescriptions(),
-            'meta_keyword' => $editableManufacturer->getLocalizedMetaKeywords(),
-            'is_enabled' => $editableManufacturer->isEnabled(),
-        ];
-
-        if ($this->multistoreEnabled) {
-            $data['shop_association'] = $editableManufacturer->getAssociatedShops();
+        $data = [];
+        foreach ($activity_type->getActivityTypeLangs() as $activity_type_lang) {
+            $data['name'][$activity_type_lang->getLang()->getId()] = $activity_type_lang->getName();
         }
 
         return $data;
@@ -96,11 +83,10 @@ final class ManufacturerFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
-        $data['is_enabled'] = true;
-
         if ($this->multistoreEnabled) {
             $data['shop_association'] = $this->defaultShopAssociation;
         }
+        $data['name'] = [];
 
         return $data;
     }

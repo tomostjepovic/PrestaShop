@@ -18,10 +18,15 @@
  */
 
 import Grid from '@components/grid/grid';
+import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
+import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
+import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
+import SortingExtension from '@components/grid/extension/sorting-extension';
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
+import SubmitGridExtension from '@components/grid/extension/submit-grid-action-extension';
+import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
+import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
-import SortingExtension from "@components/grid/extension/sorting-extension";
-import PositionExtension from "@components/grid/extension/position-extension";
 
 const $ = window.$;
 
@@ -30,9 +35,14 @@ $(() => {
   gridDivs.forEach((gridDiv) => {
     const linkBlockGrid = new Grid(gridDiv.dataset.gridId);
 
+    linkBlockGrid.addExtension(new ReloadListActionExtension());
+    linkBlockGrid.addExtension(new ExportToSqlManagerExtension());
+    linkBlockGrid.addExtension(new FiltersResetExtension());
     linkBlockGrid.addExtension(new SortingExtension());
     linkBlockGrid.addExtension(new LinkRowActionExtension());
+    linkBlockGrid.addExtension(new SubmitGridExtension());
+    linkBlockGrid.addExtension(new SubmitBulkExtension());
+    linkBlockGrid.addExtension(new BulkActionCheckboxExtension());
     linkBlockGrid.addExtension(new SubmitRowActionExtension());
-    linkBlockGrid.addExtension(new PositionExtension());
   });
 });

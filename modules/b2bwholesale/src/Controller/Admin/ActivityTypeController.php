@@ -2,13 +2,12 @@
 namespace PrestaShop\Module\B2BWholesale\Controller\Admin;
 
 use PrestaShop\Module\B2BWholesale\Entity\ActivityType;
-use PrestaShop\Module\B2BWholesale\Form\ActivityTypeType;
-
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteria;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 
 class ActivityTypeController extends FrameworkBundleAdminController
 {
@@ -34,43 +33,51 @@ class ActivityTypeController extends FrameworkBundleAdminController
 
     private function getFormBuilder(): FormBuilderInterface
     {
-        return $this->get('prestashop.core.form.identifiable_object.builder.manufacturer_form_builder');
+        return $this->get('prestashop.module.b2bwholesale.form.identifiable_object.builder.activity_type_form_builder');
     }
 
-    public function createAction(Request $request): Response
+    private function getFormHandler(): FormHandlerInterface
     {
-        $form = $this->createForm(ActivityTypeType::class);
+        return $this->get('prestashop.module.b2bwholesale.form.identifiable_object.data_handler.activity_type_form_handler');
+    }
+
+    public function createAction(Request $request)
+    {
+        $form_builder = $this->getFormBuilder();
+        $form = $form_builder->getForm();
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $activity_type = new ActivityType();
-            $activity_type->setName($form->get('name')->getData());
-            $em->persist($activity_type);
-            $em->flush();
+
+        $formHandler = $this->getFormHandler();
+        $result = $formHandler->handle($form);
+
+        if (null !== $result->getIdentifiableObjectId()) {
+            $this->addFlash(
+                'success',
+                $this->trans('Successful creation.', 'Admin.Notifications.Success')
+            );
+
+            return $this->redirectToRoute('activity_type_list');
         }
 
         return $this->render(
             '@Modules/b2bwholesale/views/templates/admin/activity_type.html.twig',
             [
-                 'form' => $form->createView()
+                'form' => $form->createView()
             ]
         );
     }
 
-    public function editAction(int $activityTypeId, Request $request): ?Response
+    public function editAction($activityTypeId, Request $request)
     {
-        if (!$activityTypeId) {
-            return null;
-        }
-        $em = $this->getDoctrine()->getManager();
-        $activity_type = $em->getRepository(ActivityType::class)->find($activityTypeId);
-
-        $form = $this->createForm(ActivityTypeType::class, $activity_type);
+        $form_builder = $this->getFormBuilder();
+        $form = $form_builder->getFormFor((int) $activityTypeId);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $activity_type->setName($form->get('name')->getData());
-            $em->flush();
-            $this->addFlash('success', 'Activity type successfully updated!');
+
+        $formHandler = $this->getFormHandler();
+        $result = $formHandler->handleFor((int) $activityTypeId, $form);
+
+        if ($result->isSubmitted() && $result->isValid()) {
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
             return $this->redirectToRoute('activity_type_list');
         }
@@ -90,7 +97,10 @@ class ActivityTypeController extends FrameworkBundleAdminController
         if ($activity_type) {
             $em->remove($activity_type);
             $em->flush();
-            $this->addFlash('success', 'Activity type successfully deleted!');
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
         }
 
         return $this->redirectToRoute('activity_type_list');

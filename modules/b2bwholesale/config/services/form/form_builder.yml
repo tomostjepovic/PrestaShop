@@ -1,0 +1,19 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.module.b2bwholesale.type.activityType:
+    class: 'PrestaShop\Module\B2BWholesale\Form\Builder\ActivityTypeType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    arguments:
+      - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+    tags:
+      - { name: form.type }
+
+  prestashop.module.b2bwholesale.form.identifiable_object.builder.activity_type_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
+    arguments:
+      - 'PrestaShop\Module\B2BWholesale\Form\Builder\ActivityTypeType'
+      - '@prestashop.module.b2bwholesale.form.identifiable_object.data_provider.activity_type_form_data_provider'
